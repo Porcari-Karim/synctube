@@ -70,6 +70,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 const server = createServer(app)
 useIo(server)
 
-server.listen(3000, () => {
+server.listen(5000, "0.0.0.0", () => {
   console.log('Server is running on port 3000');
 });
