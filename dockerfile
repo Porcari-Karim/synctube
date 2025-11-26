@@ -4,7 +4,8 @@
 FROM node:latest AS base
 
 # Install pnpm globally
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN npm install -g pnpm
 
 WORKDIR /app
 
