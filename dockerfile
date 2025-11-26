@@ -37,7 +37,9 @@ RUN pnpm --filter synctube-backend run build
 # 5. Runtime image (lighter)
 # ---------------------------------------------------------
 FROM node:latest AS runtime
-RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Install pnpm manually
+RUN npm install -g pnpm
 
 WORKDIR /app
 
