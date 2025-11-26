@@ -13,7 +13,7 @@ WORKDIR /app
 # ---------------------------------------------------------
 COPY pnpm-workspace.yaml ./
 COPY shared/package.json ./shared/
-COPY sunctube-backend/package.json ./sunctube-backend/
+COPY synctube-backend/package.json ./synctube-backend/
 
 # Copy lock file if you have it
 COPY pnpm-lock.yaml ./
@@ -29,8 +29,8 @@ RUN pnpm --filter shared run build
 # ---------------------------------------------------------
 # 4. Build backend
 # ---------------------------------------------------------
-COPY sunctube-backend ./sunctube-backend
-RUN pnpm --filter sunctube-backend run build
+COPY synctube-backend ./synctube-backend
+RUN pnpm --filter synctube-backend run build
 
 # ---------------------------------------------------------
 # 5. Runtime image (lighter)
