@@ -1,36 +1,29 @@
 # ---------------------------------------------------------
-# 1. Base image with latest Node and pnpm
+# 1. Base image with Node.js and pnpm
 # ---------------------------------------------------------
 FROM node:latest AS base
 
 # Install pnpm globally
-# RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN npm install -g pnpm
 
 WORKDIR /app
 
 # ---------------------------------------------------------
-# 2. Install dependencies for ALL workspaces
+# 2. Copy all workspace files
 # ---------------------------------------------------------
-COPY pnpm-workspace.yaml ./
-COPY shared/package.json ./shared/
-COPY synctube-backend/package.json ./synctube-backend/
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY shared ./shared
+COPY synctube-backend ./synctube-backend
 
-# Copy lock file if you have it
-COPY pnpm-lock.yaml ./
-
+# ---------------------------------------------------------
+# 3. Install dependencies
+# ---------------------------------------------------------
 RUN pnpm install --frozen-lockfile
 
 # ---------------------------------------------------------
-# 3. Build "shared"
+# 4. Build workspaces
 # ---------------------------------------------------------
-COPY shared ./shared
 RUN pnpm --filter shared run build
-
-# ---------------------------------------------------------
-# 4. Build backend
-# ---------------------------------------------------------
-COPY synctube-backend ./synctube-backend
 RUN pnpm --filter synctube-backend run build
 
 # ---------------------------------------------------------
@@ -38,16 +31,16 @@ RUN pnpm --filter synctube-backend run build
 # ---------------------------------------------------------
 FROM node:latest AS runtime
 
-# Install pnpm manually
+# Install pnpm in runtime as well
 RUN npm install -g pnpm
 
 WORKDIR /app
 
-# Copy only necessary built files
+# Copy only the built artifacts and node_modules from base
 COPY --from=base /app ./
 
 # Expose your backend port
-EXPOSE 3000
+EXPOSE 5000
 
 # ---------------------------------------------------------
 # 6. Start the app
