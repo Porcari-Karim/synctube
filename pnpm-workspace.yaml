@@ -1,0 +1,4 @@
+packages:
+  - synctube-backend
+  - synctube-frontend
+  - shared

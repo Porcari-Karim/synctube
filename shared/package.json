@@ -1,0 +1,26 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+
+  "dependencies": {
+    "mongodb": "^7.0.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  }
+}
