@@ -4,6 +4,8 @@ import { useRoomsMutations } from "./useRoomsMutations";
 import { useAuth } from "../auth/useAuth";
 import {  useGlobalAlert } from "../utils/useAlert";
 import { useNavigate } from "react-router";
+import { ShowModalButton } from "../utils/ShowModalButton";
+import { UpdateRoomForm } from "./UpdateRoomForm";
 
 function getYouTubeVideoId(urlStr: string): string | null {
   try {
@@ -77,7 +79,14 @@ export const RoomCard = (roomDto: RoomDto) => {
               </CardContent>
             </CardActionArea>
                 <Stack direction='row' justifyContent="end" >
-                    {(user?.username === roomDto.owner.username) && (<Button variant="text"  onClick={deleteRoomHandler} >DELETE</Button>)}
+                    {(user?.username === roomDto.owner.username) && (
+                      <>
+                      <Button variant="text"  onClick={deleteRoomHandler} >DELETE</Button>
+                      <ShowModalButton text="UPDATE" variant="text" title="Update room" >
+                        <UpdateRoomForm room={roomDto} />
+                      </ShowModalButton>
+                      </>
+                    )}
                 </Stack>
       </Card>
   );

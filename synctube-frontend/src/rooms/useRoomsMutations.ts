@@ -24,8 +24,18 @@ export const useRoomsMutations = () => {
         }
     })
 
+    const updateRoomMutation = useMutation({
+        mutationFn: ({id, newRoom}: {id: string, newRoom: CreateRoomDto} ) => {
+            return axiosInstance.patch(`${ROOMS_URL}${id}`, newRoom);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [ROOMS_KEY] });
+        }
+    })
+
     return {
         createRoomMutation,
-        deleteRoomMutation
+        deleteRoomMutation,
+        updateRoomMutation
     }
 }

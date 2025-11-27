@@ -19,17 +19,32 @@ const createRoom = Protected(async (room: CreateRoomDto ) : Promise<void> => {
 })
 
 const deleteRoom = Protected(async (roomId: string) : Promise<void> => {
-    await roomRepository.deleteOne({ _id: new ObjectId(roomId) });
+    const id = ObjectId.createFromHexString(roomId);
+    const room = await roomRepository.findOne({ _id:  id})
+    if(context.getStore()!.session.user!.username !== room?.owner.username) {
+        throw new Error("Unauthorized!")
+    }
+    await roomRepository.deleteOne({ _id:  id});
 })
 
 const getRoomById = Protected(async (roomId: string) => {
     return await roomRepository.findOne({_id: ObjectId.createFromHexString(roomId)});
 })
 
+const updateRoom = Protected(async (roomId: string, roomUpdate: CreateRoomDto) => {
+    const id = ObjectId.createFromHexString(roomId);
+    const room = await roomRepository.findOne({_id: id})
+    if(context.getStore()!.session.user!.username !== room?.owner.username) {
+        throw new Error("Unauthorized!")
+    }
+    await roomRepository.updateOne({_id: id}, {$set: {...roomUpdate}})
+}) 
+
 export const roomService = {
     getRooms,
     createRoom,
     deleteRoom,
     getRoomById,
+    updateRoom,
 };
 

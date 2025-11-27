@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { roomService } from "./rooms.service.js";
-import { CreateRoomDtoSchema, RoomDtoSchema, type RoomDto } from "shared";
+import { CreateRoomDtoSchema, RoomDtoSchema, type CreateRoomDto, type RoomDto } from "shared";
 import type { ObjectId } from "mongodb";
 
 const roomRouter : Router = Router();
@@ -17,10 +17,15 @@ roomRouter.get("/:id", async (req : Request<{id: string}, {}, {}, {}>, res: Resp
 });
 
 
-roomRouter.post("/", async (req: Request<{},{}, Omit<RoomDto, "_id">>, res: Response) => {
+roomRouter.post("/", async (req: Request<{},{}, CreateRoomDto>, res: Response) => {
    await roomService.createRoom(CreateRoomDtoSchema.parse(req.body));
    res.sendStatus(201);
 });
+
+roomRouter.patch("/:id", async (req: Request<{id: string},{}, CreateRoomDto>, res:Response) => {
+  await roomService.updateRoom(req.params.id, CreateRoomDtoSchema.parse(req.body));
+  res.sendStatus(204);
+})
 
 roomRouter.delete("/:roomId", async (req: Request<{roomId: string}, {},{}>, res: Response) => {
   const { roomId } = req.params;
